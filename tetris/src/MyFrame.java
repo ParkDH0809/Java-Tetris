@@ -4,17 +4,40 @@ import java.awt.*;
 import javax.swing.*;
 
 class MyFrame extends JFrame{
+    ImageIcon img = new ImageIcon("tetris/img/backImage.PNG");
+
+    /**Layout: 
+     * Frame -- Panel -- TetrisPanel
+     *                |
+     *                -- ScorePanel 
+     */
     MyFrame() {
         setTitle("Java Tetris");
-        setSize(700, 700);
+        setSize(700, 650);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
-        setLayout(new GridLayout(1, 2));
 
-        add(new TetrisPanel());
-        add(new ScorePanel());
+        add(addBackgroundPanel());
         
         setVisible(true);
+    }
+
+    public JPanel addBackgroundPanel() {
+
+        JPanel backgroundPanel = new JPanel(new GridLayout(1, 2)) {
+
+            public void paintComponent(Graphics g) {
+                g.drawImage(img.getImage(), 0, 0, null);
+                setOpaque(false);
+                super.paintComponent(g);
+            }
+
+        };
+        
+        backgroundPanel.add(new TetrisPanel());
+        backgroundPanel.add(new ScorePanel());
+
+        return backgroundPanel;
     }
 }

@@ -15,8 +15,10 @@ public class TetrisPanel extends JPanel {
     TetrisPanel() {
         tetrisPanel = new JPanel(new GridLayout(BACKGROUND_ROWS, BACKGROUND_COLS));
         tetrisPanel.setBackground(Color.BLACK);
+        setOpaque(false);
 
         makeTetrisBackground();
+
         add(tetrisPanel);
     }
 

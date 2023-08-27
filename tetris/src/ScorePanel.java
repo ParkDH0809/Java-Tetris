@@ -8,7 +8,10 @@ public class ScorePanel extends JPanel{
 
     ScorePanel() {
         scorePanel = new JPanel(new GridLayout(1, 1));
+        setOpaque(false);
+
         makeScore();
+        
         add(scorePanel);
     }
 
