@@ -1,22 +1,22 @@
 package tetris.src;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-public class TetrisPanel extends JPanel implements KeyListener{
+public class TetrisPanel extends JPanel{
 
     final int BACKGROUND_ROWS = 20;
     final int BACKGROUND_COLS = 10;
-    
+    final int BLOCK_SIZE = 30;
+
     JPanel tetrisPanel;
     JLabel[][] gameLabel = new JLabel[BACKGROUND_ROWS][BACKGROUND_COLS];
 
-    int blockX = 140, blockY = 5;
-    int[][] currentShape = {{1, 1}, {1, 1}};
+    final int START_X = 140, START_Y = 5;
+    int[][] currentBlock;
+    int redColor, greenColor, blueColor;
 
 
     TetrisPanel() {
@@ -27,17 +27,27 @@ public class TetrisPanel extends JPanel implements KeyListener{
         makeTetrisBackground();
         add(tetrisPanel);
 
-
-
-        addBlock();
+        makeNewBlock();
     }
 
+    void makeNewBlock() {
+        Block b = new Block();
+        currentBlock = b.getBlock();
+        int[] rgb = b.getColor();
+        redColor = rgb[0];
+        greenColor = rgb[1];
+        blueColor = rgb[2];
+
+        
+    }
+
+    //Tetris 배경 생성 메서드
     void makeTetrisBackground() {
         for(int i = 0; i < gameLabel.length; i++) {
             for(int j = 0; j < gameLabel[0].length; j++) {
                 gameLabel[i][j] = new JLabel();
                 gameLabel[i][j].setBackground(Color.BLACK);
-                gameLabel[i][j].setPreferredSize(new Dimension(30, 30));
+                gameLabel[i][j].setPreferredSize(new Dimension(BLOCK_SIZE, BLOCK_SIZE));
                 gameLabel[i][j].setOpaque(true);
                 gameLabel[i][j].setBorder(new LineBorder(Color.GRAY));
                 
@@ -46,80 +56,98 @@ public class TetrisPanel extends JPanel implements KeyListener{
         }
     }
 
-
-
-    //block을 그리는 메서드
+    //Block 그림 메서드
     @Override
     public void paint(Graphics g) {
         // TODO Auto-generated method stub
         super.paint(g);
-        for (int row = 0; row < currentShape.length; row++) {
-            for (int col = 0; col < currentShape[row].length; col++) {
-                if (currentShape[row][col] == 1) {
-                    g.fillRect((blockX + col), (blockY + row), 30, 30);
+        g.setColor(new Color(redColor, greenColor, blueColor));
+        for (int row = 0; row < currentBlock.length; row++) {
+            for (int col = 0; col < currentBlock[row].length; col++) {
+                if (currentBlock[row][col] == 1) {
+                    g.fillRect((START_X + col * BLOCK_SIZE), (START_Y + row * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE);
                 }
             }
         }
     }
-
-
-    void addBlock() {
-        Block b = new Block();
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        int keyCode = e.getKeyCode();
-
-        if (keyCode == KeyEvent.VK_LEFT) {// 왼쪽 화살표 키 처리
-            if (canMoveTo(blockX - 1, blockY)) {
-                blockX--;
-            }
-        } else if (keyCode == KeyEvent.VK_RIGHT) {// 오른쪽 화살표 키 처리
-            if (canMoveTo(blockX + 1, blockY)) {
-                blockX++;
-            }
-        } else if (keyCode == KeyEvent.VK_DOWN) {// 아래 화살표 키 처리
-            if (canMoveTo(blockX, blockY + 1)) {
-                blockY++;
-            } else {
-                // mergeShapeToBoard();
-                // checkAndClearLines();
-                // createNewShape();
-                // blockX = BOARD_WIDTH / 2 - 1;
-                // blockY = 0;
-            }
-        }
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyPressed'");
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
-    }
-
-    private boolean canMoveTo(int x, int y) {
-
-        return true;
-    }
+    
 }
 
 
 class Block {
     int type;
-    int[][] block = {
-        {1, 1},
-        {1, 1}
-    };
+    int[][] block;
+    int[] rgb = new int[3];
 
-    
+    int[] getColor() {
+        return rgb;
+    }
+
+    public int[][] getBlock() {
+        int n = (int)(Math.random() * 6);
+
+        switch(n) {
+            case 0:
+                rgb[0] = 255;
+                rgb[1] = 0;
+                rgb[2] = 0;
+                block = new int[][] {
+                    {1, 1},
+                    {1, 1}
+                };
+                break;
+                
+            case 1:
+                rgb[0] = 255;
+                rgb[1] = 128;
+                rgb[2] = 0;
+                block = new int[][] {
+                    {1, 1, 1, 1}
+                };
+                break;
+
+            case 2:
+                rgb[0] = 255;
+                rgb[1] = 255;
+                rgb[2] = 0;
+                block = new int[][] {
+                    {1, 1, 0},
+                    {0, 1, 1}
+                };
+                break;
+
+            case 3:
+                rgb[0] = 0;
+                rgb[1] = 255;
+                rgb[2] = 0;
+                block = new int[][] {
+                    {0, 1, 1},
+                    {1, 1, 0}
+                };
+                break;
+                
+            case 4:
+                rgb[0] = 0;
+                rgb[1] = 0;
+                rgb[2] = 255;
+                block = new int[][] {
+                    {0, 0, 1},
+                    {1, 1, 1}
+                };
+                break;
+
+            case 5:
+                rgb[0] = 127;
+                rgb[1] = 0;
+                rgb[2] = 255;
+                block = new int[][] {
+                    {1, 0, 0},
+                    {1, 1, 1}
+                };
+                break;
+        }
+
+        return block;
+    }
 
 }

@@ -17,7 +17,7 @@ class MyFrame extends JFrame{
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
-
+        
         add(addBackgroundPanel());
         
         setVisible(true);
