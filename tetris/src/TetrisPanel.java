@@ -6,7 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-import java.time.*;
+import java.util.*;
 
 public class TetrisPanel extends JPanel {
 
@@ -22,6 +22,8 @@ public class TetrisPanel extends JPanel {
     int redColor, greenColor, blueColor;
 
     Thread timeThread;
+
+    Block b;
 
     TetrisPanel() {
         tetrisPanel = new JPanel(new GridLayout(BACKGROUND_ROWS, BACKGROUND_COLS));
@@ -74,13 +76,29 @@ public class TetrisPanel extends JPanel {
                         System.out.println("Test_left");
                         current_X -= 30;
                         break;
+                    case KeyEvent.VK_Z:
+                        System.out.println("Test_Z");
+                        changeShape();
+                        break;
                 }
-
                 repaint();
             }
         });
+    }
+    void changeShape() {
+        int[][] changeBlock = new int[currentBlock.length][currentBlock.length];
 
-        
+        for(int i = 0; i < currentBlock.length; i++) {
+            changeBlock[i] = currentBlock[i].clone();
+            Arrays.fill(currentBlock[i], 0);
+        }
+
+        for(int i = 0; i < currentBlock.length; i++) {
+            for(int j = 0; j < currentBlock.length; j++) {
+                if(changeBlock[i][j] == 1)
+                    currentBlock[j][currentBlock.length - 1 - i] = 1;
+            }
+        }
     }
 
 
@@ -99,8 +117,8 @@ public class TetrisPanel extends JPanel {
         }
     }
 
-    Block makeNewBlock() {
-        Block b = new Block();
+    void makeNewBlock() {
+        b = new Block();
 
         currentBlock = b.getBlock();
 
@@ -108,8 +126,6 @@ public class TetrisPanel extends JPanel {
         redColor = rgb[0];
         greenColor = rgb[1];
         blueColor = rgb[2];
-
-        return b;
     }
 
     //Block 그림 메서드
@@ -119,7 +135,7 @@ public class TetrisPanel extends JPanel {
         super.paint(g);
         g.setColor(new Color(redColor, greenColor, blueColor));
         for (int row = 0; row < currentBlock.length; row++) {
-            for (int col = 0; col < currentBlock[row].length; col++) {
+            for (int col = 0; col < currentBlock.length; col++) {
                 if (currentBlock[row][col] == 1) {
                     g.fillRect((current_X + col * BLOCK_SIZE), (current_Y + row * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE);
                 }
@@ -130,7 +146,6 @@ public class TetrisPanel extends JPanel {
 
 
 class Block {
-    int type;
     int[][] block;
     int[] rgb = new int[3];
 
@@ -153,11 +168,15 @@ class Block {
                 break;
                 
             case 1:
+                
                 rgb[0] = 255;
                 rgb[1] = 128;
                 rgb[2] = 0;
                 block = new int[][] {
-                    {1, 1, 1, 1}
+                    {1, 1, 1, 1},
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0}
                 };
                 break;
 
@@ -167,7 +186,8 @@ class Block {
                 rgb[2] = 0;
                 block = new int[][] {
                     {1, 1, 0},
-                    {0, 1, 1}
+                    {0, 1, 1},
+                    {0, 0, 0}
                 };
                 break;
 
@@ -177,7 +197,8 @@ class Block {
                 rgb[2] = 0;
                 block = new int[][] {
                     {0, 1, 1},
-                    {1, 1, 0}
+                    {1, 1, 0},
+                    {0, 0, 0}
                 };
                 break;
                 
@@ -187,7 +208,8 @@ class Block {
                 rgb[2] = 255;
                 block = new int[][] {
                     {0, 0, 1},
-                    {1, 1, 1}
+                    {1, 1, 1},
+                    {0, 0, 0}
                 };
                 break;
 
@@ -197,7 +219,8 @@ class Block {
                 rgb[2] = 255;
                 block = new int[][] {
                     {1, 0, 0},
-                    {1, 1, 1}
+                    {1, 1, 1},
+                    {0, 0, 0}
                 };
                 break;
         }
@@ -206,3 +229,4 @@ class Block {
     }
 
 }
+
