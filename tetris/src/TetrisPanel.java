@@ -70,10 +70,12 @@ public class TetrisPanel extends JPanel {
                         break;
                     case KeyEvent.VK_RIGHT:
                         System.out.println("Test_right");
+                        moveCheck();
                         current_X += 30;
                         break;
                     case KeyEvent.VK_LEFT:
                         System.out.println("Test_left");
+                        moveCheck();
                         current_X -= 30;
                         break;
                     case KeyEvent.VK_Z:
@@ -86,6 +88,11 @@ public class TetrisPanel extends JPanel {
         });
     }
 
+    boolean moveCheck() {
+
+        return true;
+    }
+
     void changeShape() {
         int[][] changeBlock = new int[currentBlock.length][currentBlock.length];
 
@@ -94,18 +101,11 @@ public class TetrisPanel extends JPanel {
             Arrays.fill(currentBlock[i], 0);
         }
         
-        if(blueColor == 255) {             //ㄱ, ㄴ 도형
+        if(currentBlock.length == 3) {             //ㄱ, ㄴ 도형
             for(int i = 0; i < currentBlock.length; i++) {
                 for(int j = 0; j < currentBlock.length; j++) {
                     if(changeBlock[i][j] == 1)
                         currentBlock[j][currentBlock.length - 1 - i] = 1;
-                }
-            }
-        } else if(greenColor == 255) {      //ㄹ 도형
-            for(int i = 0; i < currentBlock.length; i++) {
-                for(int j = 0; j < currentBlock.length; j++) {          
-                    if(changeBlock[i][j] == 1)
-                        currentBlock[currentBlock.length - 1 - j][i] = 1;
                 }
             }
         } else {
@@ -172,12 +172,12 @@ class Block {
     }
 
     public int[][] getBlock() {
-        int n = (int)(Math.random() * 6);
+        int n = (int)(Math.random() * 7);
 
         switch(n) {
             case 0:
                 rgb[0] = 255;
-                rgb[1] = 0;
+                rgb[1] = 255;
                 rgb[2] = 0;
                 block = new int[][] {
                     {1, 1},
@@ -187,9 +187,9 @@ class Block {
                 
             case 1:
                 
-                rgb[0] = 255;
-                rgb[1] = 128;
-                rgb[2] = 0;
+                rgb[0] = 0;
+                rgb[1] = 255;
+                rgb[2] = 255;
                 block = new int[][] {
                     {1, 1, 1, 1},
                     {0, 0, 0, 0},
@@ -200,7 +200,7 @@ class Block {
 
             case 2:
                 rgb[0] = 255;
-                rgb[1] = 255;
+                rgb[1] = 0;
                 rgb[2] = 0;
                 block = new int[][] {
                     {1, 1, 0},
@@ -221,22 +221,33 @@ class Block {
                 break;
                 
             case 4:
-                rgb[0] = 0;
-                rgb[1] = 0;
-                rgb[2] = 255;
+                rgb[0] = 255;
+                rgb[1] = 127;
+                rgb[2] = 0;
                 block = new int[][] {
-                    {0, 0, 1},
                     {1, 1, 1},
+                    {1, 0, 0},
                     {0, 0, 0}
                 };
                 break;
 
             case 5:
-                rgb[0] = 127;
+                rgb[0] = 0;
                 rgb[1] = 0;
                 rgb[2] = 255;
                 block = new int[][] {
-                    {1, 0, 0},
+                    {1, 1, 1},
+                    {0, 0, 1},
+                    {0, 0, 0}
+                };
+                break;
+
+            case 6:
+                rgb[0] = 128;
+                rgb[1] = 0;
+                rgb[2] = 128;
+                block = new int[][] {
+                    {0, 1, 0},
                     {1, 1, 1},
                     {0, 0, 0}
                 };
