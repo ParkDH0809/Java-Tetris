@@ -1,11 +1,14 @@
 package tetris.src;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-public class TetrisPanel extends JPanel{
+public class TetrisPanel extends JPanel {
 
     final int BACKGROUND_ROWS = 20;
     final int BACKGROUND_COLS = 10;
@@ -14,10 +17,9 @@ public class TetrisPanel extends JPanel{
     JPanel tetrisPanel;
     JLabel[][] gameLabel = new JLabel[BACKGROUND_ROWS][BACKGROUND_COLS];
 
-    final int START_X = 140, START_Y = 5;
+    int current_X = 140, current_Y = 5;
     int[][] currentBlock;
     int redColor, greenColor, blueColor;
-
 
     TetrisPanel() {
         tetrisPanel = new JPanel(new GridLayout(BACKGROUND_ROWS, BACKGROUND_COLS));
@@ -27,19 +29,43 @@ public class TetrisPanel extends JPanel{
         makeTetrisBackground();
         add(tetrisPanel);
 
+        
+        // KeyEvenetThread keyThread = new KeyEvenetThread(tetrisPanel);
+        // keyThread.start();
+
         makeNewBlock();
+        keyEventMethod();
+
     }
 
-    void makeNewBlock() {
-        Block b = new Block();
-        currentBlock = b.getBlock();
-        int[] rgb = b.getColor();
-        redColor = rgb[0];
-        greenColor = rgb[1];
-        blueColor = rgb[2];
+    void keyEventMethod() {
+        this.setFocusable(true);
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch(e.getKeyCode()) {
+                    case KeyEvent.VK_DOWN:
+                        System.out.println("Test_down");
+                        current_Y += 30;
+                        
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        System.out.println("Test_right");
+                        current_X += 30;
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        System.out.println("Test_left");
+                        current_X -= 30;
+                        break;
+                }
+
+                repaint();
+            }
+        });
 
         
     }
+
 
     //Tetris 배경 생성 메서드
     void makeTetrisBackground() {
@@ -56,6 +82,19 @@ public class TetrisPanel extends JPanel{
         }
     }
 
+    Block makeNewBlock() {
+        Block b = new Block();
+
+        currentBlock = b.getBlock();
+
+        int[] rgb = b.getColor();
+        redColor = rgb[0];
+        greenColor = rgb[1];
+        blueColor = rgb[2];
+
+        return b;
+    }
+
     //Block 그림 메서드
     @Override
     public void paint(Graphics g) {
@@ -65,12 +104,11 @@ public class TetrisPanel extends JPanel{
         for (int row = 0; row < currentBlock.length; row++) {
             for (int col = 0; col < currentBlock[row].length; col++) {
                 if (currentBlock[row][col] == 1) {
-                    g.fillRect((START_X + col * BLOCK_SIZE), (START_Y + row * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE);
+                    g.fillRect((current_X + col * BLOCK_SIZE), (current_Y + row * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE);
                 }
             }
         }
     }
-    
 }
 
 
