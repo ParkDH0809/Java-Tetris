@@ -85,6 +85,7 @@ public class TetrisPanel extends JPanel {
             }
         });
     }
+
     void changeShape() {
         int[][] changeBlock = new int[currentBlock.length][currentBlock.length];
 
@@ -92,13 +93,30 @@ public class TetrisPanel extends JPanel {
             changeBlock[i] = currentBlock[i].clone();
             Arrays.fill(currentBlock[i], 0);
         }
-
-        for(int i = 0; i < currentBlock.length; i++) {
-            for(int j = 0; j < currentBlock.length; j++) {
-                if(changeBlock[i][j] == 1)
-                    currentBlock[j][currentBlock.length - 1 - i] = 1;
+        
+        if(blueColor == 255) {             //ㄱ, ㄴ 도형
+            for(int i = 0; i < currentBlock.length; i++) {
+                for(int j = 0; j < currentBlock.length; j++) {
+                    if(changeBlock[i][j] == 1)
+                        currentBlock[j][currentBlock.length - 1 - i] = 1;
+                }
+            }
+        } else if(greenColor == 255) {      //ㄹ 도형
+            for(int i = 0; i < currentBlock.length; i++) {
+                for(int j = 0; j < currentBlock.length; j++) {          
+                    if(changeBlock[i][j] == 1)
+                        currentBlock[currentBlock.length - 1 - j][i] = 1;
+                }
+            }
+        } else {
+            for(int i = 0; i < currentBlock.length; i++) {
+                for(int j = 0; j < currentBlock.length; j++) {
+                    if(changeBlock[i][j] == 1)
+                        currentBlock[j][i] = 1;
+                }
             }
         }
+
     }
 
 
