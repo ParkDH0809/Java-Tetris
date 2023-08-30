@@ -1,12 +1,12 @@
 package tetris.src;
 
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+
+import java.time.*;
 
 public class TetrisPanel extends JPanel {
 
@@ -21,6 +21,8 @@ public class TetrisPanel extends JPanel {
     int[][] currentBlock;
     int redColor, greenColor, blueColor;
 
+    Thread timeThread;
+
     TetrisPanel() {
         tetrisPanel = new JPanel(new GridLayout(BACKGROUND_ROWS, BACKGROUND_COLS));
         tetrisPanel.setBackground(Color.BLACK);
@@ -29,13 +31,29 @@ public class TetrisPanel extends JPanel {
         makeTetrisBackground();
         add(tetrisPanel);
 
+        timeThread = initBlockDownThread();
         
-        // KeyEvenetThread keyThread = new KeyEvenetThread(tetrisPanel);
-        // keyThread.start();
-
         makeNewBlock();
         keyEventMethod();
+        timeThread.start();
+    }
 
+    Thread initBlockDownThread() {
+        Thread timeThread = new Thread() {
+            public void run() {
+                while(true) {
+                    System.out.println("Time Test");
+                    try {
+                        Thread.sleep(1000);
+                        current_Y += 30;
+                        repaint();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    };
+                }
+            }
+        };
+        return timeThread;
     }
 
     void keyEventMethod() {
@@ -47,7 +65,6 @@ public class TetrisPanel extends JPanel {
                     case KeyEvent.VK_DOWN:
                         System.out.println("Test_down");
                         current_Y += 30;
-                        
                         break;
                     case KeyEvent.VK_RIGHT:
                         System.out.println("Test_right");
