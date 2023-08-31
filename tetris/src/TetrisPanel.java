@@ -17,7 +17,7 @@ public class TetrisPanel extends JPanel {
     JPanel tetrisPanel;
     JLabel[][] gameLabel = new JLabel[BACKGROUND_ROWS][BACKGROUND_COLS];
 
-    int current_X = 140, current_Y = 5;
+    int current_X = 141, current_Y = 5;
     int[][] currentBlock;
     int redColor, greenColor, blueColor;
 
@@ -70,13 +70,13 @@ public class TetrisPanel extends JPanel {
                         break;
                     case KeyEvent.VK_RIGHT:
                         System.out.println("Test_right");
-                        moveCheck();
-                        current_X += 30;
+                        if(moveCheckRight())
+                            current_X += 30;
                         break;
                     case KeyEvent.VK_LEFT:
                         System.out.println("Test_left");
-                        moveCheck();
-                        current_X -= 30;
+                        if(moveCheckLeft())
+                            current_X -= 30;
                         break;
                     case KeyEvent.VK_Z:
                         System.out.println("Test_Z");
@@ -88,9 +88,32 @@ public class TetrisPanel extends JPanel {
         });
     }
 
-    boolean moveCheck() {
+    boolean moveCheckRight() {
+        int n = 0;
+        out: for(int i = currentBlock.length - 1; i >= 0 ; i--) {
+            for(int j = currentBlock.length - 1; j >= 0; j--) 
+                if(currentBlock[j][i] == 1)
+                    break out;
+            n++;
+        }
 
-        return true;
+        if(current_X - (n * 30) + 30 < 260)
+            return true;
+        return false;
+    }
+
+    boolean moveCheckLeft() {
+        int n = 0;
+        out: for(int i = 0; i < currentBlock.length; i++) {
+            for(int j = 0; j < currentBlock.length; j++)
+                if(currentBlock[j][i] == 1)
+                    break out;
+            n++;
+        }
+        
+        if(current_X + (n * 30) - 30 > 0)
+            return true;
+        return false;
     }
 
     void changeShape() {
@@ -151,11 +174,15 @@ public class TetrisPanel extends JPanel {
     public void paint(Graphics g) {
         // TODO Auto-generated method stub
         super.paint(g);
-        g.setColor(new Color(redColor, greenColor, blueColor));
+        
         for (int row = 0; row < currentBlock.length; row++) {
             for (int col = 0; col < currentBlock.length; col++) {
                 if (currentBlock[row][col] == 1) {
+                    g.setColor(new Color(redColor, greenColor, blueColor));
                     g.fillRect((current_X + col * BLOCK_SIZE), (current_Y + row * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE);
+                    g.setColor(Color.WHITE);
+                    g.fillRect((current_X + col * BLOCK_SIZE), (current_Y + row * BLOCK_SIZE), BLOCK_SIZE, 1);
+                    g.fillRect((current_X + col * BLOCK_SIZE), (current_Y + row * BLOCK_SIZE), 1, BLOCK_SIZE);
                 }
             }
         }
