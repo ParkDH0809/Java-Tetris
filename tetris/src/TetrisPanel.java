@@ -10,20 +10,22 @@ import java.util.*;
 
 public class TetrisPanel extends JPanel {
 
-    final int BACKGROUND_ROWS = 20;
-    final int BACKGROUND_COLS = 10;
-    final int BLOCK_SIZE = 30;
+    final static int BACKGROUND_ROWS = 20;
+    final static int BACKGROUND_COLS = 10;
+    final static int TETRIS_AREA_START_X = 21;
+    final static int TETRIS_AREA_START_Y = 5;
+    final static int BLOCK_SIZE = 30;
 
     JPanel tetrisPanel;
     JLabel[][] gameLabel = new JLabel[BACKGROUND_ROWS][BACKGROUND_COLS];
 
-    int current_X = 141, current_Y = 5;
-    int[][] currentBlock;
+    int current_X = TETRIS_AREA_START_X + BLOCK_SIZE * 4;
+    int current_Y = TETRIS_AREA_START_Y;
     int redColor, greenColor, blueColor;
-
-    Thread timeThread;
-
+    int[][] currentBlock;
+    
     Block b;
+    Thread timeThread;
 
     TetrisPanel() {
         tetrisPanel = new JPanel(new GridLayout(BACKGROUND_ROWS, BACKGROUND_COLS));
@@ -33,20 +35,27 @@ public class TetrisPanel extends JPanel {
         makeTetrisBackground();
         add(tetrisPanel);
 
-        timeThread = initBlockDownThread();
-        
         makeNewBlock();
         keyEventMethod();
+
+        timeThread = initBlockDownThread();
         timeThread.start();
+
     }
 
     Thread initBlockDownThread() {
+
         Thread timeThread = new Thread() {
             public void run() {
                 while(true) {
-                    System.out.println("Time Test");
                     try {
                         Thread.sleep(1000);
+
+                        while(ScorePanel.isPause) {
+                            Thread.sleep(100);
+                        }
+                        
+                        System.out.println("Time Test");
                         current_Y += 30;
                         repaint();
                     } catch (InterruptedException e) {
@@ -55,6 +64,7 @@ public class TetrisPanel extends JPanel {
                 }
             }
         };
+
         return timeThread;
     }
 
@@ -145,6 +155,7 @@ public class TetrisPanel extends JPanel {
 
     //Tetris 배경 생성 메서드
     void makeTetrisBackground() {
+        
         for(int i = 0; i < gameLabel.length; i++) {
             for(int j = 0; j < gameLabel[0].length; j++) {
                 gameLabel[i][j] = new JLabel();
@@ -180,6 +191,8 @@ public class TetrisPanel extends JPanel {
                 if (currentBlock[row][col] == 1) {
                     g.setColor(new Color(redColor, greenColor, blueColor));
                     g.fillRect((current_X + col * BLOCK_SIZE), (current_Y + row * BLOCK_SIZE), BLOCK_SIZE, BLOCK_SIZE);
+
+                    //Border Line
                     g.setColor(Color.WHITE);
                     g.fillRect((current_X + col * BLOCK_SIZE), (current_Y + row * BLOCK_SIZE), BLOCK_SIZE, 1);
                     g.fillRect((current_X + col * BLOCK_SIZE), (current_Y + row * BLOCK_SIZE), 1, BLOCK_SIZE);

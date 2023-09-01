@@ -34,10 +34,11 @@ class MyFrame extends JFrame{
             }
 
         };
-        
+
+        // add(new PausePanel());
         backgroundPanel.add(new TetrisPanel());
         backgroundPanel.add(new ScorePanel());
-
+        
         return backgroundPanel;
     }
 }
