@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.swing.*;
 
 public class ScorePanel extends JPanel{
@@ -30,6 +33,17 @@ public class ScorePanel extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 if(isPause) {
                     isPause = false;
+                    pauseButton.setEnabled(false);
+
+                    Timer timer = new Timer();
+                    TimerTask task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            pauseButton.setEnabled(true);
+                        }
+                    };
+                    timer.schedule(task, 3000);
+
                     System.out.println("isPause: false");
                 }
                 else {

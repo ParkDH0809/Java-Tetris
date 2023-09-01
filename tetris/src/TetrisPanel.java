@@ -47,17 +47,30 @@ public class TetrisPanel extends JPanel {
 
         Thread timeThread = new Thread() {
             public void run() {
+
+                Long beforeTime = System.currentTimeMillis();
+                Long afterTime;
+
                 while(true) {
                     try {
-                        Thread.sleep(1000);
-
-                        while(ScorePanel.isPause) {
-                            Thread.sleep(100);
+                        afterTime = System.currentTimeMillis();
+                        if(ScorePanel.isPause) {
+                            while (true) { 
+                                if(!ScorePanel.isPause) {
+                                    Thread.sleep(3200);
+                                    break;
+                                }
+                            }
                         }
-                        
-                        System.out.println("Time Test");
-                        current_Y += BLOCK_SIZE;
-                        repaint();
+
+                        if(afterTime - beforeTime >= 1000) {
+                            System.out.println("Time Test");
+                            current_Y += BLOCK_SIZE;
+                            repaint();
+
+                            beforeTime = afterTime;
+                        }
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     };
@@ -183,7 +196,6 @@ public class TetrisPanel extends JPanel {
     //Block 그림 메서드
     @Override
     public void paint(Graphics g) {
-        // TODO Auto-generated method stub
         super.paint(g);
         
         for (int row = 0; row < currentBlock.length; row++) {

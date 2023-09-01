@@ -31,9 +31,7 @@ public class PausePanel extends JPanel {
                         pause.setVisible(true);
                         
                         while (true) {
-
                             if (!ScorePanel.isPause) {
-                                
                                     changeImage("count_3Img.PNG", 1000);
                                     changeImage("count_2Img.PNG", 1000);
                                     changeImage("count_1Img.PNG", 1000);
@@ -48,11 +46,12 @@ public class PausePanel extends JPanel {
                 }
             }
         };
-
+        
         return pauseThread;
     }
 
     void changeImage(String imgName, int time) {
+        
         img = new ImageIcon("tetris/img/" + imgName);
         pauseLabel.setIcon(img);
 
