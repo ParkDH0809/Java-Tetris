@@ -56,7 +56,7 @@ public class TetrisPanel extends JPanel {
                         }
                         
                         System.out.println("Time Test");
-                        current_Y += 30;
+                        current_Y += BLOCK_SIZE;
                         repaint();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -76,17 +76,17 @@ public class TetrisPanel extends JPanel {
                 switch(e.getKeyCode()) {
                     case KeyEvent.VK_DOWN:
                         System.out.println("Test_down");
-                        current_Y += 30;
+                        current_Y += BLOCK_SIZE;
                         break;
                     case KeyEvent.VK_RIGHT:
                         System.out.println("Test_right");
                         if(moveCheckRight())
-                            current_X += 30;
+                            current_X += BLOCK_SIZE;
                         break;
                     case KeyEvent.VK_LEFT:
                         System.out.println("Test_left");
                         if(moveCheckLeft())
-                            current_X -= 30;
+                            current_X -= BLOCK_SIZE;
                         break;
                     case KeyEvent.VK_Z:
                         System.out.println("Test_Z");

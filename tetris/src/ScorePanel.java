@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class ScorePanel extends JPanel{
     JPanel scorePanel;
-    static boolean isPause;
+    static volatile boolean isPause = false;
     ScorePanel() {
         scorePanel = new JPanel(new GridLayout(1, 1));
         setOpaque(false);

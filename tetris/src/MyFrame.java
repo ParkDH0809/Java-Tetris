@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 class MyFrame extends JFrame{
-    ImageIcon img = new ImageIcon("tetris/img/backImage.PNG");
+    Image img = new ImageIcon("tetris/img/backgroundImg.PNG").getImage();
 
     /**Layout: 
      * Frame -- Panel -- TetrisPanel
@@ -17,7 +17,9 @@ class MyFrame extends JFrame{
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
-        
+
+
+        add(new PausePanel());
         add(addBackgroundPanel());
         
         setVisible(true);
@@ -28,14 +30,13 @@ class MyFrame extends JFrame{
         JPanel backgroundPanel = new JPanel(new GridLayout(1, 2)) {
 
             public void paintComponent(Graphics g) {
-                g.drawImage(img.getImage(), 0, 0, null);
+                g.drawImage(img, 0, 0, null);
                 setOpaque(false);
                 super.paintComponent(g);
             }
 
         };
 
-        // add(new PausePanel());
         backgroundPanel.add(new TetrisPanel());
         backgroundPanel.add(new ScorePanel());
         
