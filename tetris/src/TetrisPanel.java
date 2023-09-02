@@ -91,16 +91,19 @@ public class TetrisPanel extends JPanel {
                         System.out.println("Test_down");
                         current_Y += BLOCK_SIZE;
                         break;
-                    case KeyEvent.VK_RIGHT:
-                        System.out.println("Test_right");
-                        if(moveCheckRight())
-                            current_X += BLOCK_SIZE;
-                        break;
+
                     case KeyEvent.VK_LEFT:
                         System.out.println("Test_left");
                         if(moveCheckLeft())
                             current_X -= BLOCK_SIZE;
                         break;
+
+                    case KeyEvent.VK_RIGHT:
+                        System.out.println("Test_right");
+                        if(moveCheckRight())
+                            current_X += BLOCK_SIZE;
+                        break;
+
                     case KeyEvent.VK_Z:
                         System.out.println("Test_Z");
                         changeShape();
@@ -109,20 +112,6 @@ public class TetrisPanel extends JPanel {
                 repaint();
             }
         });
-    }
-
-    boolean moveCheckRight() {
-        int n = 0;
-        out: for(int i = currentBlock.length - 1; i >= 0 ; i--) {
-            for(int j = currentBlock.length - 1; j >= 0; j--) 
-                if(currentBlock[j][i] == 1)
-                    break out;
-            n++;
-        }
-
-        if(current_X - (n * 30) + 30 < 260)
-            return true;
-        return false;
     }
 
     boolean moveCheckLeft() {
@@ -134,7 +123,21 @@ public class TetrisPanel extends JPanel {
             n++;
         }
         
-        if(current_X + (n * 30) - 30 > 0)
+        if(current_X + (n * BLOCK_SIZE) - BLOCK_SIZE > 0)
+            return true;
+        return false;
+    }
+
+    boolean moveCheckRight() {
+        int n = currentBlock.length - 1;
+        out: for(int i = currentBlock.length - 1; i >= 0 ; i--) {
+            for(int j = currentBlock.length - 1; j >= 0; j--) 
+                if(currentBlock[j][i] == 1)
+                    break out;
+            n--;
+        }
+        System.out.println(n);
+        if(current_X + (n * 30) - 30 < 260)
             return true;
         return false;
     }

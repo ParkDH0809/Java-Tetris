@@ -43,10 +43,8 @@ public class ScorePanel extends JPanel{
                         }
                     };
                     timer.schedule(task, 3000);
-
                     System.out.println("isPause: false");
-                }
-                else {
+                } else {
                     isPause = true;
                     System.out.println("isPause: true");
                 }
