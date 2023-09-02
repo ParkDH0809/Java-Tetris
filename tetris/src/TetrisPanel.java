@@ -43,6 +43,7 @@ public class TetrisPanel extends JPanel {
 
     }
 
+
     Thread initBlockDownThread() {
 
         Thread timeThread = new Thread() {
@@ -93,14 +94,12 @@ public class TetrisPanel extends JPanel {
                         break;
 
                     case KeyEvent.VK_LEFT:
-                        System.out.println("Test_left");
-                        if(moveCheckLeft())
+                        if(moveLeft())
                             current_X -= BLOCK_SIZE;
                         break;
 
                     case KeyEvent.VK_RIGHT:
-                        System.out.println("Test_right");
-                        if(moveCheckRight())
+                        if(moveRight())
                             current_X += BLOCK_SIZE;
                         break;
 
@@ -114,7 +113,21 @@ public class TetrisPanel extends JPanel {
         });
     }
 
-    boolean moveCheckLeft() {
+
+    boolean moveLeft() {
+        if(current_X + (checkPositionLeft() * BLOCK_SIZE) - BLOCK_SIZE > 0)
+            return true;
+        return false;
+    }
+
+    boolean moveRight() {
+        if(current_X + (checkPositionRight() * BLOCK_SIZE) - BLOCK_SIZE < 260)
+            return true;
+        return false;
+    }
+
+    
+    int checkPositionLeft() {
         int n = 0;
         out: for(int i = 0; i < currentBlock.length; i++) {
             for(int j = 0; j < currentBlock.length; j++)
@@ -122,13 +135,11 @@ public class TetrisPanel extends JPanel {
                     break out;
             n++;
         }
-        
-        if(current_X + (n * BLOCK_SIZE) - BLOCK_SIZE > 0)
-            return true;
-        return false;
+
+        return n;
     }
 
-    boolean moveCheckRight() {
+    int checkPositionRight() {
         int n = currentBlock.length - 1;
         out: for(int i = currentBlock.length - 1; i >= 0 ; i--) {
             for(int j = currentBlock.length - 1; j >= 0; j--) 
@@ -136,20 +147,20 @@ public class TetrisPanel extends JPanel {
                     break out;
             n--;
         }
-        System.out.println(n);
-        if(current_X + (n * 30) - 30 < 260)
-            return true;
-        return false;
+
+        return n;
     }
 
     void changeShape() {
         int[][] changeBlock = new int[currentBlock.length][currentBlock.length];
 
+        //블록 복사
         for(int i = 0; i < currentBlock.length; i++) {
             changeBlock[i] = currentBlock[i].clone();
             Arrays.fill(currentBlock[i], 0);
         }
         
+        //돌리기 작업
         if(currentBlock.length == 3) {             //ㄱ, ㄴ 도형
             for(int i = 0; i < currentBlock.length; i++) {
                 for(int j = 0; j < currentBlock.length; j++) {
@@ -166,6 +177,25 @@ public class TetrisPanel extends JPanel {
             }
         }
 
+        checkOutLeft();
+        checkOutRight();
+    }   
+
+    void checkOutLeft() {
+        if(current_X >= 30)
+            return;
+            
+        if(checkPositionLeft() == 0 && current_X < 0)
+            current_X += BLOCK_SIZE;
+    }
+
+    void checkOutRight() {
+        int n =  checkPositionRight();
+
+        if(current_X + (BLOCK_SIZE * n) < 320)
+            return;
+        
+        current_X -= BLOCK_SIZE * (current_X + (BLOCK_SIZE * n) - 291) / BLOCK_SIZE;
     }
 
 
