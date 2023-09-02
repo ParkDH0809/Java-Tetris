@@ -57,7 +57,14 @@ public class TetrisPanel extends JPanel {
             public void run() {
 
                 int x, y, n;
-                while(true) {
+                Thread.currentThread();
+                while(!Thread.interrupted()) {
+                    
+                    if(fixedBlock[0][4] == 1) {
+                        timeThread.interrupt();
+                        this.interrupt();
+                    }
+
                     x = (current_X - TETRIS_AREA_START_X) / BLOCK_SIZE;
                     y = (current_Y - TETRIS_AREA_START_Y) / BLOCK_SIZE;
                     n = checkBottom();
@@ -93,8 +100,6 @@ public class TetrisPanel extends JPanel {
                 }
             }
         }
-        System.out.println(Arrays.deepToString(fixedBlock));
-        
     }
 
 
@@ -106,7 +111,8 @@ public class TetrisPanel extends JPanel {
                 Long beforeTime = System.currentTimeMillis();
                 Long afterTime;
 
-                while(true) {
+                Thread.currentThread();
+                while(!Thread.interrupted()) {
                     try {
                         afterTime = System.currentTimeMillis();
                         if(ScorePanel.isPause) {
