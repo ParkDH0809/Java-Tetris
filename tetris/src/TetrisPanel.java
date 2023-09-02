@@ -15,17 +15,22 @@ public class TetrisPanel extends JPanel {
     final static int TETRIS_AREA_START_X = 21;
     final static int TETRIS_AREA_START_Y = 5;
     final static int BLOCK_SIZE = 30;
+    static int[][] fixedBlock = new int[BACKGROUND_ROWS][BACKGROUND_COLS];
 
     JPanel tetrisPanel;
     JLabel[][] gameLabel = new JLabel[BACKGROUND_ROWS][BACKGROUND_COLS];
+    
 
-    int current_X = TETRIS_AREA_START_X + BLOCK_SIZE * 4;
-    int current_Y = TETRIS_AREA_START_Y;
+    volatile int current_X;
+    volatile int current_Y;
     int redColor, greenColor, blueColor;
+    
     int[][] currentBlock;
+    
     
     Block b;
     Thread timeThread;
+    Thread bottomThread;
 
     TetrisPanel() {
         tetrisPanel = new JPanel(new GridLayout(BACKGROUND_ROWS, BACKGROUND_COLS));
@@ -41,6 +46,55 @@ public class TetrisPanel extends JPanel {
         timeThread = initBlockDownThread();
         timeThread.start();
 
+        bottomThread = initBottomThread();
+        bottomThread.start();
+    }
+
+    Thread initBottomThread() {
+
+        Thread bottomThread = new Thread() {
+            @Override
+            public void run() {
+
+                int x, y, n;
+                while(true) {
+                    x = (current_X - TETRIS_AREA_START_X) / BLOCK_SIZE;
+                    y = (current_Y - TETRIS_AREA_START_Y) / BLOCK_SIZE;
+                    n = checkBottom();
+                    
+                    if(y + currentBlock.length - n == BACKGROUND_ROWS) {
+                        fixBottomBlock(x, y);
+                        makeNewBlock();
+                        continue;
+                    }
+
+                    out: for(int i = 0; i < currentBlock.length; i++) {
+                        for(int j = 0; j < currentBlock.length; j++) {
+                            if(y + i + 1 < BACKGROUND_ROWS && currentBlock[i][j] == 1 && fixedBlock[y + i + 1][x + j] == 1) {
+                                fixBottomBlock(x, y);
+                                makeNewBlock();
+                                break out;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        return bottomThread;
+    }
+
+    void fixBottomBlock(int x, int y) {
+        for(int i = 0; i < currentBlock.length; i++) {
+            for(int j = 0; j < currentBlock.length; j++) {
+                if(currentBlock[i][j] == 1) {
+                    gameLabel[y + i][x + j].setBackground(new Color(redColor, greenColor, blueColor));
+                    fixedBlock[y + i][x + j] = 1;
+                }
+            }
+        }
+        System.out.println(Arrays.deepToString(fixedBlock));
+        
     }
 
 
@@ -89,7 +143,6 @@ public class TetrisPanel extends JPanel {
             public void keyPressed(KeyEvent e) {
                 switch(e.getKeyCode()) {
                     case KeyEvent.VK_DOWN:
-                        System.out.println("Test_down");
                         current_Y += BLOCK_SIZE;
                         break;
 
@@ -104,7 +157,6 @@ public class TetrisPanel extends JPanel {
                         break;
 
                     case KeyEvent.VK_Z:
-                        System.out.println("Test_Z");
                         changeShape();
                         break;
                 }
@@ -124,6 +176,18 @@ public class TetrisPanel extends JPanel {
         if(current_X + (checkPositionRight() * BLOCK_SIZE) - BLOCK_SIZE < 260)
             return true;
         return false;
+    }
+
+    int checkBottom() {
+        int n = 0;
+        out: for(int i = currentBlock.length - 1; i >= 0 ; i--) {
+            for(int j = currentBlock.length - 1; j >= 0; j--) 
+                if(currentBlock[i][j] == 1)
+                    break out;
+            n++;
+            
+        }
+        return n;
     }
 
     
@@ -217,6 +281,9 @@ public class TetrisPanel extends JPanel {
 
     void makeNewBlock() {
         b = new Block();
+
+        current_X = TETRIS_AREA_START_X + BLOCK_SIZE * 4;
+        current_Y = TETRIS_AREA_START_Y;
 
         currentBlock = b.getBlock();
 
