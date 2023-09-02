@@ -26,7 +26,8 @@ public class PausePanel extends JPanel {
         Thread pauseThread = new Thread() {
             @Override
             public void run() {
-                while (true) {
+                Thread.currentThread();
+                while (!Thread.interrupted()) {
                     if (ScorePanel.isPause) {
                         pause.setVisible(true);
                         
@@ -42,7 +43,18 @@ public class PausePanel extends JPanel {
                             }
                         }
                     }
-                    repaint();
+                    if(TetrisPanel.isGameOver) {
+                        
+                        changeImage("gameoverImg.PNG", 0);
+                        pause.setVisible(true);
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        this.interrupt();
+                    }
                 }
             }
         };
@@ -51,7 +63,7 @@ public class PausePanel extends JPanel {
     }
 
     void changeImage(String imgName, int time) {
-        
+        System.out.println("Test");
         img = new ImageIcon("tetris/img/" + imgName);
         pauseLabel.setIcon(img);
 

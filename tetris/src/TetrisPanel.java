@@ -10,12 +10,14 @@ import java.util.*;
 
 public class TetrisPanel extends JPanel {
 
+
     final static int BACKGROUND_ROWS = 20;
     final static int BACKGROUND_COLS = 10;
     final static int TETRIS_AREA_START_X = 21;
     final static int TETRIS_AREA_START_Y = 5;
     final static int BLOCK_SIZE = 30;
     static int[][] fixedBlock = new int[BACKGROUND_ROWS][BACKGROUND_COLS];
+    static boolean isGameOver = false;
 
     JPanel tetrisPanel;
     JLabel[][] gameLabel = new JLabel[BACKGROUND_ROWS][BACKGROUND_COLS];
@@ -60,9 +62,11 @@ public class TetrisPanel extends JPanel {
                 Thread.currentThread();
                 while(!Thread.interrupted()) {
                     
+                    //Game Over
                     if(fixedBlock[0][4] == 1) {
                         timeThread.interrupt();
                         this.interrupt();
+                        isGameOver = true;
                     }
 
                     x = (current_X - TETRIS_AREA_START_X) / BLOCK_SIZE;
