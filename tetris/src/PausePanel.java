@@ -50,7 +50,6 @@ public class PausePanel extends JPanel {
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
                         this.interrupt();

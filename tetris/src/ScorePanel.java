@@ -28,6 +28,7 @@ public class ScorePanel extends JPanel{
 
     void pauseArea() {
         JButton pauseButton = new JButton("Pause");
+        pauseButton.setBackground(new Color(255, 204, 051));
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
