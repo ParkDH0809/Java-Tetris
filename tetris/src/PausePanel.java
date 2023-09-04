@@ -62,7 +62,6 @@ public class PausePanel extends JPanel {
     }
 
     void changeImage(String imgName, int time) {
-        System.out.println("Test");
         img = new ImageIcon("tetris/img/" + imgName);
         pauseLabel.setIcon(img);
 

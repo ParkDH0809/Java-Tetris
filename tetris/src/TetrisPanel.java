@@ -16,8 +16,10 @@ public class TetrisPanel extends JPanel {
     final static int TETRIS_AREA_START_X = 21;
     final static int TETRIS_AREA_START_Y = 5;
     final static int BLOCK_SIZE = 30;
+
     static boolean[][] fixedBlock = new boolean[BACKGROUND_ROWS][BACKGROUND_COLS];
     static boolean isGameOver = false;
+    static int downTimer = 1000;
 
     JPanel tetrisPanel;
     JLabel[][] gameLabel = new JLabel[BACKGROUND_ROWS][BACKGROUND_COLS];
@@ -109,6 +111,7 @@ public class TetrisPanel extends JPanel {
                 if(j == 9) {
                     takedownBlock(i);
                     ScorePanel.score += 100;
+                    downTimer -= 15;
                 }
             }
         }
@@ -153,6 +156,7 @@ public class TetrisPanel extends JPanel {
                 Thread.currentThread();
                 while(!Thread.interrupted()) {
                     try {
+
                         afterTime = System.currentTimeMillis();
                         if(ScorePanel.isPause) {
                             while (true) { 
@@ -163,8 +167,7 @@ public class TetrisPanel extends JPanel {
                             }
                         }
 
-                        if(afterTime - beforeTime >= 1000) {
-                            System.out.println("Time Test");
+                        if(afterTime - beforeTime >= downTimer) {
                             current_Y += BLOCK_SIZE;
                             repaint();
 
@@ -189,6 +192,7 @@ public class TetrisPanel extends JPanel {
                 switch(e.getKeyCode()) {
                     case KeyEvent.VK_DOWN:
                         current_Y += BLOCK_SIZE;
+                        ScorePanel.score++;
                         break;
 
                     case KeyEvent.VK_LEFT:
