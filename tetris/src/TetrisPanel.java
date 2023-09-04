@@ -101,21 +101,21 @@ public class TetrisPanel extends JPanel {
 
     void checkLine(int x, int y, int n) {
         for(int i = y; i < y + currentBlock.length - n; i++) {
-
             for(int j = 0; j < BACKGROUND_COLS; j++) {
-
                 if(!fixedBlock[i][j]) {
                     break;
                 }
 
                 if(j == 9) {
                     takedownBlock(i);
+                    ScorePanel.score += 100;
                 }
             }
         }
     }
 
     void takedownBlock(int y) {
+        
         for(int i = 0; i < BACKGROUND_COLS; i++) {
             fixedBlock[y][i] = false;
             gameLabel[y][i].setBackground(Color.BLACK);
@@ -123,12 +123,10 @@ public class TetrisPanel extends JPanel {
 
         for(int i = y; i > 0; i--) {
             for(int j = 0; j < BACKGROUND_COLS; j++) {
-                System.out.println(i);
                 fixedBlock[i][j] = fixedBlock[i-1][j];
                 gameLabel[i][j].setBackground(gameLabel[i-1][j].getBackground());
             }
         }
-
     }
 
 

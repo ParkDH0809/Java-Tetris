@@ -10,8 +10,11 @@ import java.util.TimerTask;
 import javax.swing.*;
 
 public class ScorePanel extends JPanel{
-    JPanel scorePanel;
+    
     static volatile boolean isPause = false;
+    static volatile int score = 0;
+
+    JPanel scorePanel;
     ScorePanel() {
         scorePanel = new JPanel(new GridLayout(1, 1));
         setOpaque(false);
@@ -19,11 +22,23 @@ public class ScorePanel extends JPanel{
         scoreArea();
         pauseArea();
         add(scorePanel);
+
     }
 
     void scoreArea() {
-        JLabel scoreLabel = new JLabel("Score : ");
+        JLabel scoreLabel = new JLabel("Score: " + score);
         add(scoreLabel);
+
+        Thread scoreThread = new Thread() {
+            @Override
+            public void run() {
+                while(true) {
+                    scoreLabel.setText("Score: " + score);
+                }
+            }
+        };
+
+        scoreThread.start();
     }
 
     void pauseArea() {
