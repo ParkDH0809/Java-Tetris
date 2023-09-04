@@ -16,7 +16,7 @@ public class TetrisPanel extends JPanel {
     final static int TETRIS_AREA_START_X = 21;
     final static int TETRIS_AREA_START_Y = 5;
     final static int BLOCK_SIZE = 30;
-    static int[][] fixedBlock = new int[BACKGROUND_ROWS][BACKGROUND_COLS];
+    static boolean[][] fixedBlock = new boolean[BACKGROUND_ROWS][BACKGROUND_COLS];
     static boolean isGameOver = false;
 
     JPanel tetrisPanel;
@@ -50,6 +50,7 @@ public class TetrisPanel extends JPanel {
 
         bottomThread = initBottomThread();
         bottomThread.start();
+
     }
 
     Thread initBottomThread() {
@@ -63,7 +64,7 @@ public class TetrisPanel extends JPanel {
                 while(!Thread.interrupted()) {
                     
                     //Game Over
-                    if(fixedBlock[0][4] == 1) {
+                    if(fixedBlock[0][4]) {
                         timeThread.interrupt();
                         this.interrupt();
                         isGameOver = true;
@@ -75,14 +76,17 @@ public class TetrisPanel extends JPanel {
                     
                     if(y + currentBlock.length - n == BACKGROUND_ROWS) {
                         fixBottomBlock(x, y);
+                        checkLine(x, y, n);
                         makeNewBlock();
                         continue;
                     }
 
                     out: for(int i = 0; i < currentBlock.length; i++) {
                         for(int j = 0; j < currentBlock.length; j++) {
-                            if(y + i + 1 < BACKGROUND_ROWS && currentBlock[i][j] == 1 && fixedBlock[y + i + 1][x + j] == 1) {
+                            if(y + i + 1 < BACKGROUND_ROWS && x + j < BACKGROUND_COLS &&
+                            currentBlock[i][j] == 1 && fixedBlock[y + i + 1][x + j]) {
                                 fixBottomBlock(x, y);
+                                checkLine(x, y, n);
                                 makeNewBlock();
                                 break out;
                             }
@@ -95,12 +99,45 @@ public class TetrisPanel extends JPanel {
         return bottomThread;
     }
 
+    void checkLine(int x, int y, int n) {
+        for(int i = y; i < y + currentBlock.length - n; i++) {
+
+            for(int j = 0; j < BACKGROUND_COLS; j++) {
+
+                if(!fixedBlock[i][j]) {
+                    break;
+                }
+
+                if(j == 9) {
+                    takedownBlock(i);
+                }
+            }
+        }
+    }
+
+    void takedownBlock(int y) {
+        for(int i = 0; i < BACKGROUND_COLS; i++) {
+            fixedBlock[y][i] = false;
+            gameLabel[y][i].setBackground(Color.BLACK);
+        }
+
+        for(int i = y; i > 0; i--) {
+            for(int j = 0; j < BACKGROUND_COLS; j++) {
+                System.out.println(i);
+                fixedBlock[i][j] = fixedBlock[i-1][j];
+                gameLabel[i][j].setBackground(gameLabel[i-1][j].getBackground());
+            }
+        }
+
+    }
+
+
     void fixBottomBlock(int x, int y) {
         for(int i = 0; i < currentBlock.length; i++) {
             for(int j = 0; j < currentBlock.length; j++) {
                 if(currentBlock[i][j] == 1) {
                     gameLabel[y + i][x + j].setBackground(new Color(redColor, greenColor, blueColor));
-                    fixedBlock[y + i][x + j] = 1;
+                    fixedBlock[y + i][x + j] = true;
                 }
             }
         }
